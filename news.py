@@ -1,4 +1,5 @@
 import requests
+import logging
 
 file = open("apigmailpass.txt", "r")
 content = file.read().split(", ")
@@ -18,14 +19,21 @@ class NewsFeed:
 
     def get(self):
         url = self._build_url()
+        try:
+            response = requests.get(url)
+            response.raise_for_status()
+            articles = self._get_articles(url)
 
-        articles = self._get_articles(url)
+            email_body = ''
+            for article in articles:
+                email_body = email_body + article['title'] + "\n" + article['url'] + "\n\n"
 
-        email_body = ''
-        for article in articles:
-            email_body = email_body + article['title'] + "\n" + article['url'] + "\n\n"
+            return email_body
 
-        return email_body
+        except requests.RequestException as e:
+            print(f"Request failed: {e}")
+            logging.error(f"News fetch failed for self.interest: {e}")
+            return None
 
     def _get_articles(self, url):
         response = requests.get(url)
