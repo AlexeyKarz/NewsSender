@@ -1,11 +1,14 @@
 import requests
 
+file = open("apigmailpass.txt", "r")
+content = file.read().split(", ")
+
 
 class NewsFeed:
     """Representing multiple news titles and links as a single string
     """
     base_url = "http://newsapi.org/v2/everything?"
-    api_key = "INSERT YOUR API KEY HERE"
+    api_key = content[0]
 
     def __init__(self, interest, from_date, to_date, language='en'):
         self.interest = interest
@@ -41,5 +44,5 @@ class NewsFeed:
 
 
 if __name__ == "__main__":
-    news_feed = NewsFeed(interest='nasa', from_date='2020-11-12', to_date='2020-11-13', language='en')
+    news_feed = NewsFeed(interest='nasa', from_date='2024-02-03', to_date='2024-02-04', language='en')
     print(news_feed.get())
